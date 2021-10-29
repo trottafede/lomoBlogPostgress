@@ -1,6 +1,6 @@
 const customQuery = require("../db/customQuery");
-class Comment {
-  id;
+const Model = require("./Model");
+class Comment extends Model {
   firstname;
   lastname;
   email;
@@ -34,13 +34,7 @@ class Comment {
     }
   }
 
-  static async findAll() {
-    const query = {
-      text: `SELECT * FROM authors `,
-    };
-    const authors = await customQuery(query);
-    return authors.rows;
-  }
+  static find(fields) {}
   static async findById(id) {
     const query = {
       text: `SELECT * FROM authors WHERE id = $1`,
@@ -49,8 +43,16 @@ class Comment {
     const author = await customQuery(query);
     return author.rows[0];
   }
+  static async findAll() {
+    const query = {
+      text: `SELECT * FROM authors `,
+    };
+    const authors = await customQuery(query);
+    return authors.rows;
+  }
+
   async update() {}
-  static async deleteById(id) {}
+  async delete() {}
 }
 
 module.exports = Comment;

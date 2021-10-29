@@ -24,7 +24,9 @@
   </head>
   <body>
     <%- include("partials/navbar") %>
-
+    <!-- if -->
+    <% if (singleBlog) { %>
+    <!-- if single article -->
     <div id="SingleArticle" class="container">
       <div class="row">
         <div class="col-md-12">
@@ -45,12 +47,92 @@
 
         <div class="col-md-12">
           <p id="author">
-            <i>This article was made by <%- singleBlog.author_id %> </i>
+            <i
+              >This article was made by <%-author.firstname %> <%-
+              author.lastname %>
+            </i>
           </p>
+        </div>
+
+        <% if (comments.length > 0) { %>
+        <div id="listComments" class="col-md-12">
+          <% comments.forEach(function(comment){ %>
+          <div id="userComment" class="mb-3">
+            <h6><%-comment.name %></h6>
+            <p><%-comment.content %></p>
+          </div>
+          <% }); %>
+        </div>
+        <% } else { %>
+        <p id="userComment" class="text-center">
+          No comment here, be the first one!
+        </p>
+        <% } %>
+
+        <div id="comments" class="col-md-12">
+          <div id="singleComment">
+            <form
+              class="needs-validation"
+              action="/comment/<%- singleBlog.id %>"
+              method="post"
+              novalidate
+            >
+              <div class="mb-3">
+                <label class="form-label" for="name">User</label>
+                <input
+                  required
+                  minlength="5"
+                  maxlength="255"
+                  class="form-control"
+                  type="text"
+                  name="name"
+                  id="name"
+                />
+                <div class="valid-feedback">Name ok!</div>
+
+                <div class="invalid-feedback">
+                  <span>Máximos carácteres 21844</span>
+                  <br />
+                  <span>Minimos carácteres 5</span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="content">Comentario</label>
+                <textarea
+                  required
+                  class="form-control"
+                  id="content"
+                  name="content"
+                  rows="4"
+                  required
+                  maxlength="21844"
+                  minlength="5"
+                ></textarea>
+
+                <div class="valid-feedback">Content ok!</div>
+
+                <div class="invalid-feedback">
+                  <span>Máximos carácteres 21844</span>
+                  <br />
+                  <span>Minimos carácteres 5</span>
+                </div>
+              </div>
+
+              <div class="mb-3 mt-1">
+                <button class="btn btn-primary" type="submit">Postear</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- if single article -->
+    <% } else{ %>
+    <!-- else -->
+    <h2>No hay contenido</h2>
+    <% } %>
+    <!--  -->
     <%- include("partials/footer") %>
 
     <!-- JS bootstrap -->
@@ -59,5 +141,32 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+
+    <!-- validate form -->
+    <script>
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+      (function () {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
   </body>
 </html>

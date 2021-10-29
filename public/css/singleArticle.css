@@ -109,4 +109,13 @@
     font-size: 1.2rem;
     text-align: end;
   }
+
+  #comments {
+    display: flex;
+    justify-content: center;
+  }
+  #singleComment {
+    width: 50%;
+    margin-bottom: 20px;
+  }
 }

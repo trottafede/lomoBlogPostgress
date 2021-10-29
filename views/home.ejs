@@ -30,11 +30,13 @@
     <main>
       <div class="container">
         <div class="row">
+          <% if (blogs.length > 0) { %>
+
           <div class="col-md-12">
             <h1 style="text-align: center">Browse the best lomo topics</h1>
           </div>
-
-          <% if (blogs) { %> <% blogs.forEach(function(singleBlog){ %>
+          <!--  -->
+          <% blogs.forEach(function(singleBlog){ %>
           <div class="col-lg-3 singleBlog">
             <div>
               <div class="imgContainer">
@@ -48,7 +50,16 @@
               <h3><%- singleBlog.title %></h3>
               <p><%- singleBlog.content.substr(0,150)%></p>
               <p>
-                <i>Article made by: <%- singleBlog.author_id %> </i>
+                <i
+                  >Article made by: <% authors.forEach(function(author){ %>
+                  <!--  -->
+                  <% if (parseInt(author.id) === singleBlog.author_id) { %>
+                  <%-author.firstname %> <%- author.lastname %>
+                  <!--  -->
+                  <% } %>
+                  <!--  -->
+                  <% }); %>
+                </i>
                 <br />
                 <em
                   ><%- singleBlog.created_at.toLocaleDateString('en-us', {
@@ -58,7 +69,12 @@
               <a href="/articulo/<%- singleBlog.id %>">Read more</a>
             </div>
           </div>
-          <% }); %> <% } %>
+          <% }); %>
+          <!-- if -->
+          <% } else { %>
+          <h2 class="text-center">No hay contenido</h2>
+          <% } %>
+          <!--  -->
         </div>
       </div>
     </main>

@@ -13,12 +13,9 @@ module.exports = {
     author.name = name;
     author.lastname = lastname;
     author.email = email;
-
-    if (await author.save()) {
-      res.redirect("/admin");
-    } else {
-      res.status(400).send("Hacker sorete no te metas");
-    }
+    await author.save();
+    res.redirect("/admin");
+    // res.status(400).send("Hacker sorete no te metas");
   },
   render: (req, res) => {
     res.render("createAuthor");

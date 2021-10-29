@@ -127,6 +127,7 @@ main h1 {
 
   .singleBlog img {
     width: auto;
+    max-width: 150px;
     height: 150px;
     border-bottom-left-radius: 0;
     transition: transform 0.3s, -webkit-transform 0.3s;
@@ -147,6 +148,21 @@ main h1 {
     overflow: hidden;
     max-width: 75ch;
     font-size: 0.94rem;
+  }
+
+  #listComments p {
+    margin: 0;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  #userComment h6 {
+    text-align: center;
+  }
+  #userComment {
+    background-color: rgb(236, 225, 225);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 30px;
   }
 }
 

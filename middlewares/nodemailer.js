@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-module.exports = function nodeMailer(body) {
+module.exports = async function nodeMailer(body) {
   let { title, content, author, image } = body;
 
   // Nodemail

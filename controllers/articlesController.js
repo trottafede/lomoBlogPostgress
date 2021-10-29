@@ -1,21 +1,24 @@
 const Article = require("../models/Article");
+const Comment = require("../models/Comment");
 const Author = require("../models/Author");
 const nodeMailer = require("../middlewares/nodemailer");
 module.exports = {
   index: async (req, res) => {
     const blogs = await Article.findAll();
-    res.render("home", { blogs });
+    let authors = await Author.findAll();
+    res.render("home", { blogs, authors });
   },
 
   show: async (req, res) => {
     let id = req.params.id;
     const singleBlog = await Article.findById(id); // Model
-    res.render("article", { singleBlog }); //View
+    const comments = await Comment.findByPk(id);
+    const author = await Author.findById(singleBlog.author_id);
+    res.render("article", { singleBlog, comments, author }); //View
   },
 
   AdminPage: async (req, res) => {
     const blogs = await Article.findAll();
-
     let authors = await Author.findAll();
     res.render("admin", { blogs: blogs, authors: authors });
   },
@@ -28,7 +31,10 @@ module.exports = {
 
   destroy: async (req, res) => {
     let id = req.params.id;
-    await Article.deleteById(id); // Model
+    // await Article.delete(id); // Model
+    const articleToDelete = new Article();
+    articleToDelete.id = id;
+    await articleToDelete.delete();
     res.redirect("/admin"); // View
   },
 
@@ -40,12 +46,9 @@ module.exports = {
     article.content = content;
     article.author_id = author_id;
     article.image = image;
+    await article.update();
 
-    if (await article.update()) {
-      res.redirect("/admin");
-    } else {
-      res.status(400).send("Hacker sorete no te metas");
-    }
+    res.redirect("/admin");
   },
 
   store: async (req, res) => {
@@ -56,12 +59,11 @@ module.exports = {
     article.author_id = author_id;
     article.image = image;
 
-    if (await article.save()) {
-      nodeMailer(req.body);
-      res.redirect("/admin");
-    } else {
-      res.status(400).send("Hacker sorete no te metas");
-    }
+    await article.save();
+    await nodeMailer(req.body);
+    res.redirect("/admin");
+
+    // res.status(400).send("Hacker sorete no te metas");
   },
   render: async (req, res) => {
     let users = await Author.findAll();

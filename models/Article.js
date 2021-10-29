@@ -1,11 +1,10 @@
 const customQuery = require("../db/customQuery");
-class Article {
-  id;
+const Model = require("./Model");
+class Article extends Model {
   title;
   content;
   image;
   author_id;
-  created_at = Date.now();
 
   rules = {
     title_length_max: 255,
@@ -18,6 +17,7 @@ class Article {
     image_length_min: 5,
   };
 
+  static find(fields) {}
   async save() {
     if (
       this.title.length <= this.rules.title_length_max &&
@@ -29,10 +29,15 @@ class Article {
       this.image.length <= this.rules.image_length_max &&
       this.image.length >= this.rules.image_length_min
     ) {
-      let fecha = new Date();
       const query = {
         text: `INSERT INTO articles (title, content, author_id, image, created_at) VALUES ($1,$2,$3,$4,$5)`,
-        values: [this.title, this.content, this.author_id, this.image, fecha],
+        values: [
+          this.title,
+          this.content,
+          this.author_id,
+          this.image,
+          this.created_at,
+        ],
       };
       customQuery(query);
       return true;
@@ -40,7 +45,6 @@ class Article {
       return undefined;
     }
   }
-
   static async findById(id) {
     const query = {
       text: `SELECT * FROM articles WHERE id = $1`,
@@ -49,7 +53,6 @@ class Article {
     const article = await customQuery(query);
     return article.rows[0];
   }
-
   static async findAll() {
     const query = {
       text: `SELECT * from articles ORDER BY created_at DESC`,
@@ -87,10 +90,10 @@ class Article {
       return undefined;
     }
   }
-  static async deleteById(id) {
+  async delete() {
     const query = {
       text: `DELETE FROM articles WHERE id = ($1)`,
-      values: [id],
+      values: [this.id],
     };
     await customQuery(query);
   }
